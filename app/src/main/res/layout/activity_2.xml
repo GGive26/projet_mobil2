@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Formulaire d'initialisation d'un entrepot"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez le nom de l'entrepot"
+            android:id="@+id/edit_nom"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez le type de l'entrepot"
+            android:id="@+id/edit_type"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez le type de l'entrepot"
+            android:id="@+id/edit_date_Stockage"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la temperature maximal"
+            android:id="@+id/edit_temp_max"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la temperature minimale"
+            android:id="@+id/edit_temp_min"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez l'humidite maximale"
+            android:id="@+id/edit_hum_max"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez l'humidite minimale"
+            android:id="@+id/edit_hum_min"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la longitude"
+            android:id="@+id/edit_longitude"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la latitude"
+            android:id="@+id/edit_latitude"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_confirmation"
+            android:text="Confirmer"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

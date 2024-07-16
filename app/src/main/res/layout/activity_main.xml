@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:ignore="NamespaceTypo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="50dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bienvenu"
+            android:textAlignment="center"
+            android:textSize="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="75dp"
+            android:text="Notre application as pour objectif d'aider les entrepeneur a garder le controle sur leur entrepots de n'importe quelle endroit du monde,il vous faudra connaitre la longitude et la latidude afin de determiner son adresse,cet application seras relier a des capteurs afin de determiner la tenperatures des entrepots "
+            android:textSize="15dp" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Demarrer"
+            android:textSize="15dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/btnDemarrer"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
