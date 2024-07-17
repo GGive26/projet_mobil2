@@ -31,10 +31,10 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
             holder = ViewHolder()
             holder.nom_entrepot = view.findViewById(R.id.txt_aff_nom)
             holder.type_entrepot = view.findViewById(R.id.txt_aff_type)
-            holder.temp_actuel = view.findViewById(R.id.txt_aff_temp_act)
-            holder.humidite_actuel=view.findViewById(R.id.txt_aff_hum_act)
-            holder.adresse=view.findViewById(R.id.txt_aff_adress)
-
+            holder.hum_max = view.findViewById(R.id.txt_aff_hum_max)
+            holder.hum_min=view.findViewById(R.id.txt_aff_hum_min)
+            holder.temp_max=view.findViewById(R.id.txt_aff_temp_max)
+            holder.temp_min=view.findViewById(R.id.txt_aff_temp_min)
             view.tag = holder
         } else {
             view = convertView
@@ -44,9 +44,13 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
         val entrepot = EntrepotList[position]
         holder.nom_entrepot.text = entrepot.NOM_EMPLACEMENT
         holder.type_entrepot.text = entrepot.TYPE
-        holder.temp_actuel.text = entrepot.TEMPERATURE_ACT.toString()
-        holder.humidite_actuel.text=entrepot.HUMIDITE_ACT.toString()
-        holder.adresse.text=entrepot.ADRESSE
+        holder.temp_max.text = entrepot.TEMPERATURE_MAX.toString()
+        holder.temp_min.text = entrepot.TEMPERATURE_MIN.toString()
+        holder.hum_max.text = entrepot.HUMIDITE_MAX.toString()
+        holder.hum_min.text = entrepot.HUMIDITE_MIN.toString()
+        //holder.temp_actuel.text = entrepot.TEMPERATURE_ACT.toString()
+       // holder.humidite_actuel.text=entrepot.HUMIDITE_ACT.toString()
+       // holder.adresse.text=entrepot.ADRESSE
         return view
     }
 
@@ -54,9 +58,13 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
     private class ViewHolder {
          lateinit var nom_entrepot: TextView
          lateinit var type_entrepot: TextView
-         lateinit var temp_actuel: TextView
-         lateinit var humidite_actuel: TextView
-         lateinit var adresse: TextView
+         lateinit var temp_max:TextView
+        lateinit var temp_min: TextView
+        lateinit var hum_max: TextView
+        lateinit var hum_min:TextView
+         //lateinit var temp_actuel: TextView
+         //lateinit var humidite_actuel: TextView
+         //lateinit var adresse: TextView
     }
 
 }

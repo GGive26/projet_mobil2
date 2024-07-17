@@ -25,17 +25,23 @@
             android:id="@+id/edit_nom"
             />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la date de stockage l'entrepot"
+            android:id="@+id/btn_Date"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtDate"
+            />
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="veuillez entrez le type de l'entrepot"
             android:id="@+id/edit_type"
-            />
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="veuillez entrez le type de l'entrepot"
-            android:id="@+id/edit_date_Stockage"
             />
         <EditText
             android:layout_width="wrap_content"
@@ -61,18 +67,7 @@
             android:hint="veuillez entrez l'humidite minimale"
             android:id="@+id/edit_hum_min"
             />
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="veuillez entrez la longitude"
-            android:id="@+id/edit_longitude"
-            />
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="veuillez entrez la latitude"
-            android:id="@+id/edit_latitude"
-            />
+
 
         <Button
             android:layout_width="wrap_content"

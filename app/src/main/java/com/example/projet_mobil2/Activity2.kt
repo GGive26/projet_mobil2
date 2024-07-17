@@ -2,57 +2,62 @@ package com.example.projet_mobil2
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.time.LocalDate
+
 
 class Activity2 : AppCompatActivity() {
 
     private lateinit var nom_entrepot:EditText
     private lateinit var type_entrepot:EditText
-    private lateinit var temp_actuel: EditText
-    private lateinit var humidite_actuel:EditText
+   // private lateinit var temp_actuel: EditText
+   // private lateinit var humidite_actuel:EditText
     private lateinit var temperature_max:EditText
     private lateinit var temperature_min:EditText
     private lateinit var humidite_max:EditText
     private lateinit var humidite_min:EditText
-    private lateinit var longitude:EditText
-    private lateinit var latitude:EditText
-    private lateinit var adresse:EditText
-    private lateinit var date_stockage:EditText
+   // private lateinit var longitude:EditText
+    //private lateinit var latitude:EditText
+   // private lateinit var adresse:EditText
+    private lateinit var date_stockage:Button
     private lateinit var confirmerButton :Button
-
-    private var id=-1
+    var id=-1
     private val calendar = Calendar.getInstance()
-
 
     // base de donnees locale
     private lateinit var database:DatabaseHelper
 
-
+    private lateinit var date_stock_aff:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_2)
 
-
+        var date :String
         // Initialisation des vues
         nom_entrepot = findViewById(R.id.edit_nom)
         type_entrepot = findViewById(R.id.edit_type)
-        longitude = findViewById(R.id.edit_longitude)
-        latitude = findViewById(R.id.edit_latitude)
+       // longitude = findViewById(R.id.edit_longitude)
+        //latitude = findViewById(R.id.edit_latitude)
         humidite_max = findViewById(R.id.edit_hum_max)
         humidite_min = findViewById(R.id.edit_hum_min)
         temperature_max = findViewById(R.id.edit_temp_max)
         temperature_min = findViewById(R.id.edit_temp_min)
         confirmerButton=findViewById(R.id.btn_confirmation)
+        date_stockage=findViewById(R.id.btn_Date)
+        date_stock_aff=findViewById(R.id.txtDate)
 
         // Gestion du sélecteur de date
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -69,22 +74,27 @@ class Activity2 : AppCompatActivity() {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).show()
+            date=calendar.toString()
         }
+
         confirmerButton.setOnClickListener {
             val nom = nom_entrepot.text.toString()
             val type = type_entrepot.text.toString()
-            val date_stock = date_stockage.text.toString()
+             date_stock_aff.text = date_stockage.text.toString()
+            date=date_stock_aff.toString()
             val tempMax = temperature_max.text.toString()
             val tempMin = temperature_min.text.toString()
             val humMax = humidite_max.text.toString()
             val humMin = humidite_min.text.toString()
-            val long = longitude.text.toString()
-            val lat = latitude.text.toString()
+           // val long = longitude.text.toString()
+            //val lat = latitude.text.toString()
 
-            if (verifierFormulaire(nom, type, date_stock, tempMax,tempMin,humMax,humMin,long,lat)) {
+            if (verifierFormulaire(nom, type, date, tempMax,tempMin,humMax,humMin)) {
                 // Préparation du résultat pour retourner à MainActivity
-                val resultIntent = Intent()
+                val resultIntent = Intent(this@Activity2,Activity3::class.java)
                 resultIntent.putExtra("id", id)
+                resultIntent.putExtra("nom",nom)
+                resultIntent.putExtra("date_stockage",date)
                 resultIntent.putExtra("type", type)
                 resultIntent.putExtra("temperature_max", tempMax)
                 resultIntent.putExtra("temperature_min", tempMin)
@@ -92,14 +102,13 @@ class Activity2 : AppCompatActivity() {
                 resultIntent.putExtra("humidite_min", humMin)
                // resultIntent.putExtra("temperature_act")
                 //resultIntent.putExtra("humidite_act", auteur)
-                //resultIntent.putExtra("adresse", datePublication)
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
+                //resultIntent.putExtra("adresse", adresse)
+                startActivity(resultIntent)
             }
         }
 
     }
-    private fun verifierFormulaire(nom: String, type: String, date_stock: String, tempMax: String,tempMin: String,humMax: String,humMin: String,long: String,lat: String): Boolean {
+    private fun verifierFormulaire(nom: String,type: String,date_stock_aff: String,tempMax: String,tempMin: String,humMax: String,humMin: String): Boolean {
         // Vérification du nom
         if (nom.isEmpty()) {
             nom_entrepot.error = "Le nom de l'entrepot doit être non vide"
@@ -113,34 +122,30 @@ class Activity2 : AppCompatActivity() {
         }
 
         // Vérification de la date de stockage
-        if (date_stock.isEmpty() || !date_stock.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
+        if (date_stock_aff.isEmpty()) {
+            ShowInfo(this@Activity2,"la date de stockage doit etre remplis")
             return false
         }
 
         // Vérification de la temperature max
-        if (tempMax.isEmpty() || tempMax.length != 13) {
+        if (tempMax.isEmpty()) {
+            ShowInfo(this@Activity2,"la temperature Maximal doit etre remplie ")
             return false
         }
         // Vérification de la temperature minimale
         if (tempMin.isEmpty()) {
+            ShowInfo(this@Activity2,"la temperature Minimal doit etre remplie ")
             return false
         }
 
         // Vérification de la humidite min
         if (humMin.isEmpty()) {
+            ShowInfo(this@Activity2,"l'humidite Minimale doit etre remplie ")
             return false
         }
         // Vérification de la humidite max
         if (humMax.isEmpty()) {
-            return false
-        }
-
-        // Vérification de la longitude
-        if (long.isEmpty()) {
-            return false
-        }
-        // Vérification de la latitude
-        if (lat.isEmpty()) {
+            ShowInfo(this@Activity2,"l'humidite Maximal doit etre remplie ")
             return false
         }
 
@@ -149,6 +154,9 @@ class Activity2 : AppCompatActivity() {
     private fun updateDateLabel() {
         val format = "yyyy-MM-dd"
         val sdf = SimpleDateFormat(format, Locale.US)
-        date_stockage.setText(sdf.format(calendar.time))
+        date_stock_aff.setText(sdf.format(calendar.time))
+    }
+    fun ShowInfo(context:Context,message:String){
+        Toast.makeText(context,message,Toast.LENGTH_LONG).show()
     }
 }

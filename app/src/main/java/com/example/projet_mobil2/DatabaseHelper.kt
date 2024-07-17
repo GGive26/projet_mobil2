@@ -14,12 +14,7 @@ class DatabaseHelper(context:Context):SQLiteOpenHelper(context,DATABASE_NAME, nu
                 + "$COLUMN_TEMPERATURE_MAX INT"
                 + "$COLUMN_TEMPERATURE_MIN INT"
                 + "$COLUMN_HUMIDITE_MAX INT"
-                + "$COLUMN_HUMIDITE_MIN INT"
-                + "$COLUMN_TEMPERATURE_ACT INT"
-                + "$COLUMN_HUMIDITE_ACT INT"
-                + "$COLUMN_LONGITUDE TEXT"
-                + "$COLUMN_LATITUDE TEXT"
-                + "$COLUMN_ADRESSE TEXT"
+                + "$COLUMN_HUMIDITE_MIN INT)"
                 )
         db.execSQL(CREATE_ENTREPOT)
     }
@@ -41,10 +36,5 @@ class DatabaseHelper(context:Context):SQLiteOpenHelper(context,DATABASE_NAME, nu
         const val COLUMN_TEMPERATURE_MIN ="temperature_min"
         const val COLUMN_HUMIDITE_MAX ="humidite_max"
         const val COLUMN_HUMIDITE_MIN ="humidite_min"
-        const val COLUMN_TEMPERATURE_ACT ="temperature_act"
-        const val COLUMN_HUMIDITE_ACT ="humidite_act"
-        const val COLUMN_LONGITUDE ="longitude"
-        const val COLUMN_LATITUDE ="latitude"
-        const val COLUMN_ADRESSE ="adresse"
     }
 }
