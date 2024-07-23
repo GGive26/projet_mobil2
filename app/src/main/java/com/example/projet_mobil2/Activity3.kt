@@ -24,7 +24,6 @@ class Activity3 : AppCompatActivity() {
             if (data != null) {
 
                 // Récupération des données renvoyées par AjouterLivreActivity
-                val id = data.getIntExtra("id", -1)
                 val NOM_EMPLACEMENT = data.getStringExtra("nom_emplacement")
                 val TYPE = data.getStringExtra("type")
                 val DATE_STOCKAGE=data.getStringExtra("date_stockage")
@@ -35,9 +34,9 @@ class Activity3 : AppCompatActivity() {
                 // val temp_act = data.getIntExtra("temperature_act",0)
                 //val hum_act = data.getIntExtra("humidite_act",0)
                 // val adresse_entrepot = data.getStringExtra("adresse")
-                val entrepot =Entrepot(id,NOM_EMPLACEMENT!!,TYPE!!, DATE_STOCKAGE!!,TEMPERATURE_MAX!!,TEMPERATURE_MIN!!,HUMIDITE_MAX!!,HUMIDITE_MINIM!!)
+                val entrepot =Entrepot(NOM_EMPLACEMENT!!,TYPE!!, DATE_STOCKAGE!!,TEMPERATURE_MAX!!,TEMPERATURE_MIN!!,HUMIDITE_MAX!!,HUMIDITE_MINIM!!)
 
-                if (id == -1) {
+                if (NOM_EMPLACEMENT.isNotEmpty()) {
                     ajouterEntrepot(entrepot)
                 } else {
                     mettreAJourEntrepot(entrepot)
@@ -62,7 +61,7 @@ class Activity3 : AppCompatActivity() {
         ajouterEntrepotButton = findViewById(R.id.btnAjouter)
         dbHelper = DatabaseHelper(this)
 
-        var id=intent.getIntExtra("id",0)
+
         var nom:String=intent.getStringExtra("nom").toString()
         var type:String=intent.getStringExtra("type").toString()
         var date_s:String=intent.getStringExtra("date_stockage").toString()
@@ -71,7 +70,7 @@ class Activity3 : AppCompatActivity() {
         var hum_max=intent.getStringExtra("humidite_max",).toString().toInt()
         var hum_min=intent.getStringExtra("humidite_min").toString().toInt()
 
-        val item= Entrepot(id,nom,type,date_s,temp_max,temp_min,hum_max,hum_min)
+        val item= Entrepot(nom,type,date_s,temp_max,temp_min,hum_max,hum_min)
 
         livresList.add(item)
 
@@ -82,7 +81,6 @@ class Activity3 : AppCompatActivity() {
 
         // Chargement des livres depuis la base de données local
         chargerEntrepotDepuisLocal()
-
         // Gestion du bouton pour ajouter un nouveau livre
         ajouterEntrepotButton.setOnClickListener {
             val intent = Intent(this, Activity2::class.java)
@@ -93,7 +91,6 @@ class Activity3 : AppCompatActivity() {
         entrepotListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val e = livresList[position]
             val intent = Intent(this, Activity2::class.java)
-            intent.putExtra("id", e.id)
             intent.putExtra("type", e.TYPE)
             intent.putExtra("temperature_max", e.TEMPERATURE_MAX)
             intent.putExtra("temperature_min", e.TEMPERATURE_MIN)
@@ -119,29 +116,24 @@ class Activity3 : AppCompatActivity() {
                 .show()
             true
         }
-
-
-
-
     }
 
 
 
 
-    private fun ajouterEntrepot(Entrepot: Entrepot) {
+    private fun ajouterEntrepot(entrepot: Entrepot) {
 
             // Ajouter le livre à la base de données locale
             val db = dbHelper.writableDatabase
             val values = ContentValues().apply {
-                put(DatabaseHelper.COLUMN_ID, Entrepot.id)
-                put(DatabaseHelper.COLUMN_NOM_EMPLACEMENT, Entrepot.NOM_EMPLACEMENT)
-                put(DatabaseHelper.COLUMN_TYPE,Entrepot.TYPE)
-                put(DatabaseHelper.COLUMN_HUMIDITE_MAX, Entrepot.HUMIDITE_MAX)
-                put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, Entrepot.TEMPERATURE_MAX)
-                put(DatabaseHelper.COLUMN_HUMIDITE_MIN, Entrepot.HUMIDITE_MIN)
-                put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, Entrepot.TEMPERATURE_MIN)
+                put(DatabaseHelper.COLUMN_NOM_EMPLACEMENT, entrepot.NOM_EMPLACEMENT)
+                put(DatabaseHelper.COLUMN_TYPE,entrepot.TYPE)
+                put(DatabaseHelper.COLUMN_DATE_STOCKAGE, entrepot.DATE_STOCKAGE)
+                put(DatabaseHelper.COLUMN_HUMIDITE_MAX, entrepot.HUMIDITE_MAX)
+                put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, entrepot.TEMPERATURE_MAX)
+                put(DatabaseHelper.COLUMN_HUMIDITE_MIN, entrepot.HUMIDITE_MIN)
+                put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, entrepot.TEMPERATURE_MIN)
                 //put(DatabaseHelper.COLUMN_ADRESSE, 0)
-                put(DatabaseHelper.COLUMN_DATE_STOCKAGE, Entrepot.DATE_STOCKAGE)
                 //put(DatabaseHelper.COLUMN_TEMPERATURE_ACT, 0)
                 //put(DatabaseHelper.COLUMN_HUMIDITE_ACT, 0)
             }
@@ -153,7 +145,6 @@ class Activity3 : AppCompatActivity() {
 
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put(DatabaseHelper.COLUMN_ID, Entrepot.id)
             put(DatabaseHelper.COLUMN_NOM_EMPLACEMENT, Entrepot.NOM_EMPLACEMENT)
             put(DatabaseHelper.COLUMN_TYPE,Entrepot.TYPE)
             put(DatabaseHelper.COLUMN_HUMIDITE_MAX, Entrepot.HUMIDITE_MAX)
@@ -165,8 +156,8 @@ class Activity3 : AppCompatActivity() {
             //put(DatabaseHelper.COLUMN_TEMPERATURE_ACT, 0)
             //put(DatabaseHelper.COLUMN_HUMIDITE_ACT, 0)
         }
-        val selection = "${DatabaseHelper.COLUMN_ID} = ?"
-        val selectionArgs = arrayOf(Entrepot.id.toString())
+        val selection = "${DatabaseHelper.COLUMN_NOM_EMPLACEMENT} = ?"
+        val selectionArgs = arrayOf(Entrepot.NOM_EMPLACEMENT)
         db.update(DatabaseHelper.TABLE_ENTREPOT, values, selection, selectionArgs)
 
     }
@@ -174,8 +165,8 @@ class Activity3 : AppCompatActivity() {
     private fun supprimerEntrepot(Entrepot: Entrepot, position: Int) {
             // Suppression du livre de la base de données locale
             val db = dbHelper.writableDatabase
-            val selection = "${DatabaseHelper.COLUMN_ID} = ?"
-            val selectionArgs = arrayOf(Entrepot.id.toString())
+            val selection = "${DatabaseHelper.COLUMN_NOM_EMPLACEMENT} = ?"
+            val selectionArgs = arrayOf(Entrepot.NOM_EMPLACEMENT)
             db.delete(DatabaseHelper.TABLE_ENTREPOT, selection, selectionArgs)
             // Suppression du livre de la liste locale
             livresList.removeAt(position)
@@ -192,7 +183,6 @@ class Activity3 : AppCompatActivity() {
 
         if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
                 val nom_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOM_EMPLACEMENT))
                 val type_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TYPE))
                 val date_stock = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE_STOCKAGE))
@@ -202,7 +192,7 @@ class Activity3 : AppCompatActivity() {
                 val humidite_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MIN))
 
 
-                val entrepot = Entrepot(id, nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min)
+                val entrepot = Entrepot(nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min)
                 livresList.add(entrepot)
             } while (cursor.moveToNext())
         }

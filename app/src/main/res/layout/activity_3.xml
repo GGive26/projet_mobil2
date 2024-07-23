@@ -32,9 +32,6 @@
             android:layout_margin="12dp"
             android:id="@+id/btnAjouter"
             />
-
-
-
     </LinearLayout>
 
 </RelativeLayout>
