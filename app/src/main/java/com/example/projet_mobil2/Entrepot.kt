@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Entrepot(
-    var id:Int=0,
     var NOM_EMPLACEMENT:String,
     var TYPE: String,
     var DATE_STOCKAGE: String,

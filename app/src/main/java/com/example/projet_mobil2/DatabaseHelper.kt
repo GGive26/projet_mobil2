@@ -1,6 +1,7 @@
 package com.example.projet_mobil2
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -36,5 +37,15 @@ class DatabaseHelper(context:Context):SQLiteOpenHelper(context,DATABASE_NAME, nu
         const val COLUMN_TEMPERATURE_MIN ="temperature_min"
         const val COLUMN_HUMIDITE_MAX ="humidite_max"
         const val COLUMN_HUMIDITE_MIN ="humidite_min"
+    }
+    fun isDataIsEmpty():Boolean{
+        val db=this.readableDatabase
+        val cursor: Cursor =db.rawQuery(
+            "SELECT COUNT(*) FROM $TABLE_ENTREPOT",null)
+        cursor.moveToFirst()
+        val count=cursor.getInt(0)
+        cursor.close()
+        db.close()
+        return count ==0
     }
 }

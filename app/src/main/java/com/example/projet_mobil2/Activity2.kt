@@ -33,7 +33,6 @@ class Activity2 : AppCompatActivity() {
    // private lateinit var adresse:EditText
     private lateinit var date_stockage:Button
     private lateinit var confirmerButton :Button
-    var id=-1
     private val calendar = Calendar.getInstance()
 
     // base de donnees locale
@@ -92,7 +91,6 @@ class Activity2 : AppCompatActivity() {
             if (verifierFormulaire(nom, type, date, tempMax,tempMin,humMax,humMin)) {
                 // Préparation du résultat pour retourner à MainActivity
                 val resultIntent = Intent(this@Activity2,Activity3::class.java)
-                resultIntent.putExtra("id", id)
                 resultIntent.putExtra("nom",nom)
                 resultIntent.putExtra("date_stockage",date)
                 resultIntent.putExtra("type", type)
