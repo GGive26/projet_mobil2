@@ -13,6 +13,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DatabaseReference
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.widget.TextView
 
 class Activity3 : AppCompatActivity() {
 
@@ -21,6 +27,17 @@ class Activity3 : AppCompatActivity() {
     private lateinit var ajouterEntrepotButton: Button
     private lateinit var dbHelper: DatabaseHelper
     private val livresList = mutableListOf<Entrepot>()
+
+    // Déclaration des variables pour afficher les valeurs de température et d'humidité
+    private lateinit var temperatureValue: TextView
+    private lateinit var humidityValue: TextView
+    private lateinit var simulateButton: Button
+    // Déclaration des variables pour gérer les capteurs
+    private lateinit var sensorManager: SensorManager
+    private var temperatureSensor: Sensor? = null
+    private var humiditySensor: Sensor? = null
+    private lateinit var sensorEventListener: SensorEventListener
+
 
     //declaration des variables de firebase
     private lateinit var firebaseDatabase: FirebaseDatabase //bd
@@ -72,6 +89,23 @@ class Activity3 : AppCompatActivity() {
 
         firebaseDatabase = FirebaseDatabase.getInstance()
         firebaseProductsRef = firebaseDatabase.getReference("Project-Mobil") //name??
+
+
+        // Initialisation des TextView et du bouton
+        temperatureValue = findViewById(R.id.temp_capteur)
+        humidityValue = findViewById(R.id.hum_capteur)
+
+        // Initialisation du gestionnaire de capteurs
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        // Obtention des capteurs de température et d'humidité
+        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
+
+
+
+
+
+
         // Initialisation des vues
         entrepotListView = findViewById(R.id.list_item)
         ajouterEntrepotButton = findViewById(R.id.btnAjouter)
@@ -90,6 +124,42 @@ class Activity3 : AppCompatActivity() {
 
         livresList.add(item)
         ajouterEntrepot(item)
+
+        // Définition du listener pour les événements des capteurs
+        sensorEventListener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                // Vérification du type de capteur et mise à jour des valeurs affichées
+                when (event.sensor.type) {
+                    Sensor.TYPE_AMBIENT_TEMPERATURE -> {
+                        val temperature = event.values[0]
+                        temperatureValue.text = "Température: ${temperature}°C"
+                        checkTemperature(temperature,item.TEMPERATURE_MAX,item.TEMPERATURE_MIN)
+                    }
+                    Sensor.TYPE_RELATIVE_HUMIDITY -> {
+                        val humidity = event.values[0]
+                        humidityValue.text = "Humidité: ${humidity}%"
+                        checkHumidity(humidity,item.HUMIDITE_MAX,item.HUMIDITE_MIN)
+                    }
+                }
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+                // Gérer les changements de précision, si nécessaire
+            }
+        }
+
+        // Enregistrement du listener pour les capteurs de température et d'humidité
+        temperatureSensor?.let {
+            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_NORMAL)
+        } ?: run {
+            Toast.makeText(this, "Capteur de température non disponible", Toast.LENGTH_SHORT).show()
+        }
+
+        humiditySensor?.let {
+            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_NORMAL)
+        } ?: run {
+            Toast.makeText(this, "Capteur d'humidité non disponible", Toast.LENGTH_SHORT).show()
+        }
 
         // Configuration de l'adapter pour la ListView
         entrepotAdapter = EntrepotAdapter(this@Activity3, livresList)
@@ -261,6 +331,54 @@ class Activity3 : AppCompatActivity() {
         cursor.close()
         runOnUiThread {
             entrepotAdapter.notifyDataSetChanged()
+        }
+    }
+
+    // Méthode pour vérifier si la température dépasse les seuils définis
+    private fun checkTemperature(temperature: Float,temp_max:Int,temp_min:Int) {
+        when {
+            temperature > temp_max -> {
+                // Affichage d'un Toast si la température est trop élevée
+                Toast.makeText(this, "Température trop élevée: $temperature°C", Toast.LENGTH_SHORT).show()
+            }
+            temperature < temp_min -> {
+                // Affichage d'un Toast si la température est trop basse
+                Toast.makeText(this, "Température trop basse: $temperature°C", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Méthode pour vérifier si l'humidité dépasse les seuils définis
+    private fun checkHumidity(humidity: Float,hum_max:Int,hum_min: Int) {
+        when {
+            humidity > hum_max -> {
+                // Affichage d'un Toast si l'humidité est trop élevée
+                Toast.makeText(this, "Humidité trop élevée: $humidity%", Toast.LENGTH_SHORT).show()
+            }
+            humidity < hum_min -> {
+                // Affichage d'un Toast si l'humidité est trop basse
+                Toast.makeText(this, "Humidité trop basse: $humidity%", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Méthode appelée lorsque l'activité est en pause
+    override fun onPause() {
+        super.onPause()
+        // Désenregistrement du listener pour économiser les ressources
+        sensorManager.unregisterListener(sensorEventListener)
+    }
+
+    // Méthode appelée lorsque l'activité est reprise
+    override fun onResume() {
+        super.onResume()
+        // Réenregistrement du listener pour recommencer à recevoir les mises à jour des capteurs
+        temperatureSensor?.let {
+            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+
+        humiditySensor?.let {
+            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
     }
 
