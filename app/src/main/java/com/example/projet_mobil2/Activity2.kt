@@ -22,21 +22,14 @@ class Activity2 : AppCompatActivity() {
 
     private lateinit var nom_entrepot:EditText
     private lateinit var type_entrepot:EditText
-   // private lateinit var temp_actuel: EditText
-   // private lateinit var humidite_actuel:EditText
     private lateinit var temperature_max:EditText
     private lateinit var temperature_min:EditText
     private lateinit var humidite_max:EditText
     private lateinit var humidite_min:EditText
-   // private lateinit var longitude:EditText
-    //private lateinit var latitude:EditText
-   // private lateinit var adresse:EditText
     private lateinit var date_stockage:Button
     private lateinit var confirmerButton :Button
     private val calendar = Calendar.getInstance()
 
-    // base de donnees locale
-    private lateinit var database:DatabaseHelper
 
     private lateinit var date_stock_aff:TextView
 
@@ -48,8 +41,6 @@ class Activity2 : AppCompatActivity() {
         // Initialisation des vues
         nom_entrepot = findViewById(R.id.edit_nom)
         type_entrepot = findViewById(R.id.edit_type)
-       // longitude = findViewById(R.id.edit_longitude)
-        //latitude = findViewById(R.id.edit_latitude)
         humidite_max = findViewById(R.id.edit_hum_max)
         humidite_min = findViewById(R.id.edit_hum_min)
         temperature_max = findViewById(R.id.edit_temp_max)
@@ -77,16 +68,14 @@ class Activity2 : AppCompatActivity() {
         }
 
         confirmerButton.setOnClickListener {
-            val nom = nom_entrepot.text.toString()
-            val type = type_entrepot.text.toString()
+            var nom = nom_entrepot.text.toString()
+            var type = type_entrepot.text.toString()
              date_stock_aff.text = date_stockage.text.toString()
             date=date_stock_aff.toString()
-            val tempMax = temperature_max.text.toString()
-            val tempMin = temperature_min.text.toString()
-            val humMax = humidite_max.text.toString()
-            val humMin = humidite_min.text.toString()
-           // val long = longitude.text.toString()
-            //val lat = latitude.text.toString()
+            var tempMax = temperature_max.text.toString()
+            var tempMin = temperature_min.text.toString()
+            var humMax = humidite_max.text.toString()
+            var humMin = humidite_min.text.toString()
 
             if (verifierFormulaire(nom, type, date, tempMax,tempMin,humMax,humMin)) {
                 // Préparation du résultat pour retourner à MainActivity
@@ -98,9 +87,6 @@ class Activity2 : AppCompatActivity() {
                 resultIntent.putExtra("temperature_min", tempMin)
                 resultIntent.putExtra("humidite_max", humMax)
                 resultIntent.putExtra("humidite_min", humMin)
-               // resultIntent.putExtra("temperature_act")
-                //resultIntent.putExtra("humidite_act", auteur)
-                //resultIntent.putExtra("adresse", adresse)
                 startActivity(resultIntent)
             }
         }
@@ -121,29 +107,29 @@ class Activity2 : AppCompatActivity() {
 
         // Vérification de la date de stockage
         if (date_stock_aff.isEmpty()) {
-            ShowInfo(this@Activity2,"la date de stockage doit etre remplis")
+            Toast.makeText(this,"date stockage requise",Toast.LENGTH_LONG)
             return false
         }
 
         // Vérification de la temperature max
         if (tempMax.isEmpty()) {
-            ShowInfo(this@Activity2,"la temperature Maximal doit etre remplie ")
+            Toast.makeText(this,"Temperature maximale requise",Toast.LENGTH_LONG)
             return false
         }
         // Vérification de la temperature minimale
         if (tempMin.isEmpty()) {
-            ShowInfo(this@Activity2,"la temperature Minimal doit etre remplie ")
+            Toast.makeText(this,"Temperature minimale requise",Toast.LENGTH_LONG)
             return false
         }
 
         // Vérification de la humidite min
         if (humMin.isEmpty()) {
-            ShowInfo(this@Activity2,"l'humidite Minimale doit etre remplie ")
+            Toast.makeText(this,"Humidite minimale requise",Toast.LENGTH_LONG)
             return false
         }
         // Vérification de la humidite max
         if (humMax.isEmpty()) {
-            ShowInfo(this@Activity2,"l'humidite Maximal doit etre remplie ")
+            Toast.makeText(this,"Humidite maximale requise",Toast.LENGTH_LONG)
             return false
         }
 
@@ -154,7 +140,5 @@ class Activity2 : AppCompatActivity() {
         val sdf = SimpleDateFormat(format, Locale.US)
         date_stock_aff.setText(sdf.format(calendar.time))
     }
-    fun ShowInfo(context:Context,message:String){
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show()
-    }
+
 }

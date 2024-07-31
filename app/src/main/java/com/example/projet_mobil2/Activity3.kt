@@ -22,19 +22,16 @@ class Activity3 : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             val data = result.data
             if (data != null) {
-
                 // Récupération des données renvoyées par AjouterLivreActivity
-                val NOM_EMPLACEMENT = data.getStringExtra("nom_emplacement")
-                val TYPE = data.getStringExtra("type")
-                val DATE_STOCKAGE=data.getStringExtra("date_stockage")
-                val TEMPERATURE_MAX = data.getIntExtra("temperature_max", 0)
-                val TEMPERATURE_MIN = data.getIntExtra("temperature_min", 0)
-                val HUMIDITE_MAX = data.getIntExtra("humidite_max", 0)
-                val HUMIDITE_MINIM = data.getIntExtra("humidite_min", 0)
-                // val temp_act = data.getIntExtra("temperature_act",0)
-                //val hum_act = data.getIntExtra("humidite_act",0)
-                // val adresse_entrepot = data.getStringExtra("adresse")
-                val entrepot =Entrepot(NOM_EMPLACEMENT!!,TYPE!!, DATE_STOCKAGE!!,TEMPERATURE_MAX!!,TEMPERATURE_MIN!!,HUMIDITE_MAX!!,HUMIDITE_MINIM!!)
+                var NOM_EMPLACEMENT = data.getStringExtra("nom")
+                var TYPE = data.getStringExtra("type")
+                var DATE_STOCKAGE=data.getStringExtra("date_stockage")
+                var TEMPERATURE_MAX = data.getStringExtra("temperature_max").toString().toInt()
+                var TEMPERATURE_MIN = data.getStringExtra("temperature_min").toString().toInt()
+                var HUMIDITE_MAX = data.getStringExtra("humidite_max").toString().toInt()
+                var HUMIDITE_MINIM = data.getStringExtra("humidite_min").toString().toInt()
+
+                var entrepot= Entrepot(NOM_EMPLACEMENT!!,TYPE!!, DATE_STOCKAGE!!,TEMPERATURE_MAX,TEMPERATURE_MIN,HUMIDITE_MAX,HUMIDITE_MINIM)
 
                 if (NOM_EMPLACEMENT.isNotEmpty()) {
                     ajouterEntrepot(entrepot)
@@ -62,17 +59,18 @@ class Activity3 : AppCompatActivity() {
         dbHelper = DatabaseHelper(this)
 
 
-        var nom:String=intent.getStringExtra("nom").toString()
-        var type:String=intent.getStringExtra("type").toString()
-        var date_s:String=intent.getStringExtra("date_stockage").toString()
-        var temp_max=intent.getStringExtra("temperature_max").toString().toInt()
-        var temp_min=intent.getStringExtra("temperature_min").toString().toInt()
-        var hum_max=intent.getStringExtra("humidite_max",).toString().toInt()
-        var hum_min=intent.getStringExtra("humidite_min").toString().toInt()
+        val nom:String=intent.getStringExtra("nom").toString()
+        val type:String=intent.getStringExtra("type").toString()
+        val date_s:String=intent.getStringExtra("date_stockage").toString()
+        val temp_max =intent.getStringExtra("temperature_max").toString().toInt()
+        val temp_min=intent.getStringExtra("temperature_min").toString().toInt()
+        val hum_max=intent.getStringExtra("humidite_max").toString().toInt()
+        val hum_min=intent.getStringExtra("humidite_min").toString().toInt()
 
         val item= Entrepot(nom,type,date_s,temp_max,temp_min,hum_max,hum_min)
 
         livresList.add(item)
+        ajouterEntrepot(item)
 
         // Configuration de l'adapter pour la ListView
          entrepotAdapter = EntrepotAdapter(this@Activity3, livresList)
@@ -92,13 +90,12 @@ class Activity3 : AppCompatActivity() {
             val e = livresList[position]
             val intent = Intent(this, Activity2::class.java)
             intent.putExtra("type", e.TYPE)
+            intent.putExtra("nom",e.NOM_EMPLACEMENT)
+            intent.putExtra("date_s",e.DATE_STOCKAGE)
             intent.putExtra("temperature_max", e.TEMPERATURE_MAX)
             intent.putExtra("temperature_min", e.TEMPERATURE_MIN)
             intent.putExtra("humidite_max", e.HUMIDITE_MAX)
             intent.putExtra("humidite_min", e.HUMIDITE_MIN)
-            // intent.putExtra("temperature_act",e.TEMP_ACT)
-            //intent.putExtra("humidite_act", e.HUMIDITE_ACT)
-            //intent.putExtra("adresse", e.DATE_STOCK)
             ajouterEntrepotLauncher.launch(intent)
         }
 
@@ -118,9 +115,6 @@ class Activity3 : AppCompatActivity() {
         }
     }
 
-
-
-
     private fun ajouterEntrepot(entrepot: Entrepot) {
 
             // Ajouter le livre à la base de données locale
@@ -133,31 +127,26 @@ class Activity3 : AppCompatActivity() {
                 put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, entrepot.TEMPERATURE_MAX)
                 put(DatabaseHelper.COLUMN_HUMIDITE_MIN, entrepot.HUMIDITE_MIN)
                 put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, entrepot.TEMPERATURE_MIN)
-                //put(DatabaseHelper.COLUMN_ADRESSE, 0)
-                //put(DatabaseHelper.COLUMN_TEMPERATURE_ACT, 0)
-                //put(DatabaseHelper.COLUMN_HUMIDITE_ACT, 0)
+
             }
             db.insert(DatabaseHelper.TABLE_ENTREPOT, null, values)
         }
 
     // Méthode pour mettre à jour un livre
-    private fun mettreAJourEntrepot(Entrepot: Entrepot) {
+    private fun mettreAJourEntrepot(entrepot: Entrepot) {
 
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put(DatabaseHelper.COLUMN_NOM_EMPLACEMENT, Entrepot.NOM_EMPLACEMENT)
-            put(DatabaseHelper.COLUMN_TYPE,Entrepot.TYPE)
-            put(DatabaseHelper.COLUMN_HUMIDITE_MAX, Entrepot.HUMIDITE_MAX)
-            put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, Entrepot.TEMPERATURE_MAX)
-            put(DatabaseHelper.COLUMN_HUMIDITE_MIN, Entrepot.HUMIDITE_MIN)
-            put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, Entrepot.TEMPERATURE_MIN)
-            //put(DatabaseHelper.COLUMN_ADRESSE, 0)
-            put(DatabaseHelper.COLUMN_DATE_STOCKAGE, Entrepot.DATE_STOCKAGE)
-            //put(DatabaseHelper.COLUMN_TEMPERATURE_ACT, 0)
-            //put(DatabaseHelper.COLUMN_HUMIDITE_ACT, 0)
+            put(DatabaseHelper.COLUMN_NOM_EMPLACEMENT, entrepot.NOM_EMPLACEMENT)
+            put(DatabaseHelper.COLUMN_TYPE,entrepot.TYPE)
+            put(DatabaseHelper.COLUMN_HUMIDITE_MAX, entrepot.HUMIDITE_MAX)
+            put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, entrepot.TEMPERATURE_MAX)
+            put(DatabaseHelper.COLUMN_HUMIDITE_MIN, entrepot.HUMIDITE_MIN)
+            put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, entrepot.TEMPERATURE_MIN)
+            put(DatabaseHelper.COLUMN_DATE_STOCKAGE, entrepot.DATE_STOCKAGE)
         }
         val selection = "${DatabaseHelper.COLUMN_NOM_EMPLACEMENT} = ?"
-        val selectionArgs = arrayOf(Entrepot.NOM_EMPLACEMENT)
+        val selectionArgs = arrayOf(entrepot.NOM_EMPLACEMENT)
         db.update(DatabaseHelper.TABLE_ENTREPOT, values, selection, selectionArgs)
 
     }
@@ -183,16 +172,16 @@ class Activity3 : AppCompatActivity() {
 
         if (cursor.moveToFirst()) {
             do {
-                val nom_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOM_EMPLACEMENT))
-                val type_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TYPE))
-                val date_stock = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE_STOCKAGE))
-                val temp_max = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TEMPERATURE_MAX))
-                val temp_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TEMPERATURE_MIN))
-                val humidite_max = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MAX))
-                val humidite_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MIN))
+                var nom_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NOM_EMPLACEMENT))
+                var type_entrepot = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TYPE))
+                var date_stock = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE_STOCKAGE))
+                var temp_max = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TEMPERATURE_MAX))
+                var temp_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TEMPERATURE_MIN))
+                var humidite_max = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MAX))
+                var humidite_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MIN))
 
 
-                val entrepot = Entrepot(nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min)
+                var entrepot = Entrepot(nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min)
                 livresList.add(entrepot)
             } while (cursor.moveToNext())
         }
