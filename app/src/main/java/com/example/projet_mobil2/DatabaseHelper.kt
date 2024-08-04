@@ -15,8 +15,9 @@ class DatabaseHelper(context:Context):SQLiteOpenHelper(context,DATABASE_NAME, nu
                 + "$COLUMN_TEMPERATURE_MAX INT,"
                 + "$COLUMN_TEMPERATURE_MIN INT,"
                 + "$COLUMN_HUMIDITE_MAX INT,"
-                + "$COLUMN_HUMIDITE_MIN INT)"
-                )
+                + "$COLUMN_HUMIDITE_MIN INT,"
+                +"$COLUMN_ADRESSE TEXT)"
+        )
         db.execSQL(CREATE_ENTREPOT)
     }
 
@@ -37,6 +38,7 @@ class DatabaseHelper(context:Context):SQLiteOpenHelper(context,DATABASE_NAME, nu
         const val COLUMN_TEMPERATURE_MIN ="temperature_min"
         const val COLUMN_HUMIDITE_MAX ="humidite_max"
         const val COLUMN_HUMIDITE_MIN ="humidite_min"
+        const val COLUMN_ADRESSE="Adresse"
     }
     fun isDataIsEmpty():Boolean{
         val db=this.readableDatabase

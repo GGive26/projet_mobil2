@@ -67,7 +67,30 @@
             android:hint="veuillez entrez l'humidite minimale"
             android:id="@+id/edit_hum_min"
             />
-
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la longitude"
+            android:id="@+id/editLongitude"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="veuillez entrez la latitude"
+            android:id="@+id/editAltitude"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAdress"
+            android:text="adresse "
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtAdress"
+            android:hint="votre adesse "
+            />
 
         <Button
             android:layout_width="wrap_content"

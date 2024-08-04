@@ -35,6 +35,7 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
             holder.hum_min=view.findViewById(R.id.txt_aff_hum_min)
             holder.temp_max=view.findViewById(R.id.txt_aff_temp_max)
             holder.temp_min=view.findViewById(R.id.txt_aff_temp_min)
+            holder.adresse=view.findViewById(R.id.txt_aff_Adresse)
             view.tag = holder
         } else {
             view = convertView
@@ -50,12 +51,13 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
         holder.hum_min.text = entrepot.HUMIDITE_MIN.toString()
         //holder.temp_actuel.text = entrepot.TEMPERATURE_ACT.toString()
        // holder.humidite_actuel.text=entrepot.HUMIDITE_ACT.toString()
-       // holder.adresse.text=entrepot.ADRESSE
+        holder.adresse.text=entrepot.ADRESSE
         return view
     }
 
 
     private class ViewHolder {
+        lateinit var adresse: TextView
          lateinit var nom_entrepot: TextView
          lateinit var type_entrepot: TextView
          lateinit var temp_max:TextView
@@ -64,7 +66,6 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
         lateinit var hum_min:TextView
          //lateinit var temp_actuel: TextView
          //lateinit var humidite_actuel: TextView
-         //lateinit var adresse: TextView
     }
 
 }

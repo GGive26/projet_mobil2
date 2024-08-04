@@ -15,7 +15,7 @@ data class Entrepot(
     var HUMIDITE_MIN:Int,
     //var TEMPERATURE_ACT:Int,
     //var HUMIDITE_ACT: String,
-    //var ADRESSE:String,
+    var ADRESSE:String,
 ) : Parcelable
 
 

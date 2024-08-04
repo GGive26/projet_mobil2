@@ -16,6 +16,14 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.time.LocalDate
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 
 
 class Activity2 : AppCompatActivity() {
@@ -33,6 +41,18 @@ class Activity2 : AppCompatActivity() {
 
     private lateinit var date_stock_aff:TextView
 
+    private lateinit var editLong: EditText
+    private lateinit var editAlt: EditText
+    private lateinit var btnAddresse: Button
+    private lateinit var txtAddresse: TextView
+
+    companion object {
+        // Constante pour le code de demande de permission
+        private const val REQUEST_LOCATION_PERMISSION = 1
+        public var Addresse=""
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_2)
@@ -48,6 +68,13 @@ class Activity2 : AppCompatActivity() {
         confirmerButton=findViewById(R.id.btn_confirmation)
         date_stockage=findViewById(R.id.btn_Date)
         date_stock_aff=findViewById(R.id.txtDate)
+
+        editLong = findViewById(R.id.editLongitude)
+        editAlt = findViewById(R.id.editAltitude)
+        btnAddresse = findViewById(R.id.btnAdress)
+        txtAddresse = findViewById(R.id.txtAdress)
+
+
 
         // Gestion du sélecteur de date
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -66,6 +93,15 @@ class Activity2 : AppCompatActivity() {
             ).show()
             date=calendar.toString()
         }
+        // Définir un écouteur de clic pour le bouton de conversion des coordonnées en adresse
+        btnAddresse.setOnClickListener {
+            val latitude = editAlt.text.toString().toDoubleOrNull()
+            val longitude = editLong.text.toString().toDoubleOrNull()
+            if (latitude != null && longitude != null) {
+                obtenirAdresseDepuisCoordonnees(latitude, longitude)
+            }
+        }
+
 
         confirmerButton.setOnClickListener {
             var nom = nom_entrepot.text.toString()
@@ -76,6 +112,7 @@ class Activity2 : AppCompatActivity() {
             var tempMin = temperature_min.text.toString()
             var humMax = humidite_max.text.toString()
             var humMin = humidite_min.text.toString()
+            var adress= Addresse.toString()
 
             if (verifierFormulaire(nom, type, date, tempMax,tempMin,humMax,humMin)) {
                 // Préparation du résultat pour retourner à MainActivity
@@ -87,11 +124,44 @@ class Activity2 : AppCompatActivity() {
                 resultIntent.putExtra("temperature_min", tempMin)
                 resultIntent.putExtra("humidite_max", humMax)
                 resultIntent.putExtra("humidite_min", humMin)
+                resultIntent.putExtra("Adresse", adress)
                 startActivity(resultIntent)
             }
         }
 
     }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun obtenirAdresseDepuisCoordonnees(latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        // Utilisation de la méthode asynchrone pour éviter de bloquer le thread principal
+        geocoder.getFromLocation(latitude, longitude, 1, @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        object : Geocoder.GeocodeListener {
+            override fun onGeocode(results: List<Address>) {
+                if (results.isNotEmpty()) {
+                    val addresse = results[0]
+                    // Exécution sur le thread principal pour mettre à jour l'interface utilisateur
+                    runOnUiThread {
+                        txtAddresse.text = addresse.getAddressLine(0)
+                        Addresse=txtAddresse.text.toString()
+                    }
+                } else {
+                    // Si aucune adresse n'est trouvée pour les coordonnées
+                    runOnUiThread {
+                        txtAddresse.text = "Coordonnées introuvables"
+                    }
+                }
+            }
+
+            override fun onError(errorMessage: String?) {
+                // Gestion des erreurs de géocodage
+                runOnUiThread {
+                    txtAddresse.text = "Erreur: $errorMessage"
+                }
+            }
+        })
+    }
+
+
     private fun verifierFormulaire(nom: String,type: String,date_stock_aff: String,tempMax: String,tempMin: String,humMax: String,humMin: String): Boolean {
         // Vérification du nom
         if (nom.isEmpty()) {
@@ -140,5 +210,7 @@ class Activity2 : AppCompatActivity() {
         val sdf = SimpleDateFormat(format, Locale.US)
         date_stock_aff.setText(sdf.format(calendar.time))
     }
+    // Fonction pour obtenir l'adresse à partir des coordonnées GPS
+
 
 }

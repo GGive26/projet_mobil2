@@ -56,6 +56,7 @@ class Activity3 : AppCompatActivity() {
                     var TEMPERATURE_MIN = data.getStringExtra("temperature_min").toString().toInt()
                     var HUMIDITE_MAX = data.getStringExtra("humidite_max").toString().toInt()
                     var HUMIDITE_MINIM = data.getStringExtra("humidite_min").toString().toInt()
+                    var Adresse=data.getStringExtra("Adresse")
 
                     var entrepot = Entrepot(
                         NOM_EMPLACEMENT!!,
@@ -64,7 +65,8 @@ class Activity3 : AppCompatActivity() {
                         TEMPERATURE_MAX,
                         TEMPERATURE_MIN,
                         HUMIDITE_MAX,
-                        HUMIDITE_MINIM
+                        HUMIDITE_MINIM,
+                        Adresse!!
                     )
 
                     if (NOM_EMPLACEMENT.isNotEmpty()) {
@@ -101,11 +103,6 @@ class Activity3 : AppCompatActivity() {
         temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY)
 
-
-
-
-
-
         // Initialisation des vues
         entrepotListView = findViewById(R.id.list_item)
         ajouterEntrepotButton = findViewById(R.id.btnAjouter)
@@ -119,8 +116,9 @@ class Activity3 : AppCompatActivity() {
         val temp_min = intent.getStringExtra("temperature_min").toString().toInt()
         val hum_max = intent.getStringExtra("humidite_max").toString().toInt()
         val hum_min = intent.getStringExtra("humidite_min").toString().toInt()
+        val Adresse=intent.getStringExtra("Adresse").toString()
 
-        val item = Entrepot(nom, type, date_s, temp_max, temp_min, hum_max, hum_min)
+        val item = Entrepot(nom, type, date_s, temp_max, temp_min, hum_max, hum_min,Adresse)
 
         livresList.add(item)
         ajouterEntrepot(item)
@@ -186,6 +184,7 @@ class Activity3 : AppCompatActivity() {
                 intent.putExtra("temperature_min", e.TEMPERATURE_MIN)
                 intent.putExtra("humidite_max", e.HUMIDITE_MAX)
                 intent.putExtra("humidite_min", e.HUMIDITE_MIN)
+                intent.putExtra("Adresse",e.ADRESSE)
                 ajouterEntrepotLauncher.launch(intent)
             }
 
@@ -218,6 +217,7 @@ class Activity3 : AppCompatActivity() {
             put(DatabaseHelper.COLUMN_TEMPERATURE_MAX, entrepot.TEMPERATURE_MAX)
             put(DatabaseHelper.COLUMN_HUMIDITE_MIN, entrepot.HUMIDITE_MIN)
             put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, entrepot.TEMPERATURE_MIN)
+            put(DatabaseHelper.COLUMN_ADRESSE,entrepot.ADRESSE)
 
         }
         db.insert(DatabaseHelper.TABLE_ENTREPOT, null, values)
@@ -255,6 +255,7 @@ class Activity3 : AppCompatActivity() {
             put(DatabaseHelper.COLUMN_HUMIDITE_MIN, entrepot.HUMIDITE_MIN)
             put(DatabaseHelper.COLUMN_TEMPERATURE_MIN, entrepot.TEMPERATURE_MIN)
             put(DatabaseHelper.COLUMN_DATE_STOCKAGE, entrepot.DATE_STOCKAGE)
+            put(DatabaseHelper.COLUMN_ADRESSE,entrepot.ADRESSE)
         }
         val selection = "${DatabaseHelper.COLUMN_NOM_EMPLACEMENT} = ?"
         val selectionArgs = arrayOf(entrepot.NOM_EMPLACEMENT)
@@ -320,9 +321,10 @@ class Activity3 : AppCompatActivity() {
                 var temp_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TEMPERATURE_MIN))
                 var humidite_max = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MAX))
                 var humidite_min = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_HUMIDITE_MIN))
+                var Adresse=cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ADRESSE))
 
 
-                var entrepot = Entrepot(nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min)
+                var entrepot = Entrepot(nom_entrepot, type_entrepot, date_stock,temp_max,temp_min,humidite_max,humidite_min,Adresse!!)
                 livresList.add(entrepot)
 
                 firebaseProductsRef.child(nom_entrepot.toString()).setValue(entrepot) //already a string ??
