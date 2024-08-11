@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="toolbarStyle">@style/CustomToolbar</item>
+    </style>
+
+    <!-- Style personnalisé pour la Toolbar -->
+    <style name="CustomToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextColor">#0B0A0A</item> <!-- Couleur du texte du titre -->
+        <item name="subtitleTextColor">#0E0E0E</item> <!-- Couleur du texte du sous-titre -->
+
+    </style>
+</resources>

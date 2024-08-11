@@ -4,13 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    tools:ignore="NamespaceTypo">
+    tools:ignore="NamespaceTypo"
+    android:background="@drawable/img7">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FF9800"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="50dp"
         android:orientation="vertical"
+        android:background="#80FFFFFF"
         >
 
         <TextView
@@ -18,12 +27,14 @@
             android:layout_height="wrap_content"
             android:text="Bienvenu"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="50dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="75dp"
+            android:textColor="@color/black"
             android:text="Notre application as pour objectif d'aider les entrepeneur a garder le controle sur leur entrepots de n'importe quelle endroit du monde,il vous faudra connaitre la longitude et la latidude afin de determiner son adresse,cet application seras relier a des capteurs afin de determiner la tenperatures des entrepots "
             android:textSize="15dp" />
 
@@ -35,7 +46,26 @@
             android:textSize="15dp"
             android:layout_marginTop="40dp"
             android:id="@+id/btnDemarrer"
+            android:textColor="@android:color/white"
             />
+        <Button
+            android:id="@+id/btnEnglish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="English"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:id="@+id/btnFrench"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Français"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@id/btnEnglish"
+            android:layout_alignParentEnd="true"/>
 
 
 

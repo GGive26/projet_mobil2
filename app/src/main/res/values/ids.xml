@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="lang_en"/>
+    <item type="id" name="lang_fr"/>
+    <item type="id" name="lang_es"/>
+</resources>

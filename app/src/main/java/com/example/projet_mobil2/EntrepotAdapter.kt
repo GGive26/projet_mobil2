@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -36,6 +37,7 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
             holder.temp_max=view.findViewById(R.id.txt_aff_temp_max)
             holder.temp_min=view.findViewById(R.id.txt_aff_temp_min)
             holder.adresse=view.findViewById(R.id.txt_aff_Adresse)
+             holder.image_def=view.findViewById(R.id.image_def)
             view.tag = holder
         } else {
             view = convertView
@@ -66,6 +68,7 @@ class EntrepotAdapter (private val context: Context, private val EntrepotList: L
         lateinit var hum_min:TextView
          //lateinit var temp_actuel: TextView
          //lateinit var humidite_actuel: TextView
+        lateinit var image_def:ImageView
     }
 
 }
